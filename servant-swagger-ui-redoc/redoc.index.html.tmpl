@@ -1,23 +1,27 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
   <head>
     <title>ReDoc</title>
+    <base href="/SERVANT_SWAGGER_UI_DIR/" target="_self">
+    <!-- needed for adaptive design -->
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:300,400,700" rel="stylesheet">
+    <link rel="icon" type="image/png" href="./favicon32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="./favicon16.png" sizes="16x16" />
+
+    <!--
+    ReDoc doesn't change outer page styles
+    -->
     <style>
-      body { margin: 0; padding: 0; }
+      body {
+        margin: 0;
+        padding: 0;
+      }
     </style>
-    <script>
-        // Force Strict-URL Routing for assets relative paths
-        (function onload() {
-            if (!window.location.href.endsWith("/")) {
-                window.location.href += "/";
-            }
-        }());
-    </script>
   </head>
   <body>
     <redoc spec-url='../SERVANT_SWAGGER_UI_SCHEMA'></redoc>
-    <script src="redoc.min.js"> </script>
+    <script src="redoc.standalone.js"> </script>
   </body>
 </html>

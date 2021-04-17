@@ -58,7 +58,7 @@ module Servant.Swagger.UI.ReDoc (
 import Servant.Swagger.UI.Core
 
 import Data.ByteString (ByteString)
-import Data.Swagger    (Swagger)
+import Data.OpenApi    (OpenApi)
 import Data.Text       (Text)
 import FileEmbedLzma
 import Servant
@@ -67,8 +67,8 @@ import Servant
 --
 -- See <https://github.com/Rebilly/ReDoc/tree/v1.x>
 redocSchemaUIServer
-    :: (Server api ~ Handler Swagger)
-    => Swagger -> Server (SwaggerSchemaUI' dir api)
+    :: (Server api ~ Handler OpenApi)
+    => OpenApi -> Server (SwaggerSchemaUI' dir api)
 redocSchemaUIServer =
     swaggerSchemaUIServerImpl redocIndexTemplate redocFiles
 
@@ -80,8 +80,8 @@ redocSchemaUIServer =
 -- redocSchemaUIServerT :: Swagger -> ServerT (SwaggerSchemaUI schema dir) m
 -- @
 redocSchemaUIServerT
-    :: (Monad m, ServerT api m ~ m Swagger)
-    => Swagger -> ServerT (SwaggerSchemaUI' dir api) m
+    :: (Monad m, ServerT api m ~ m OpenApi)
+    => OpenApi -> ServerT (SwaggerSchemaUI' dir api) m
 redocSchemaUIServerT =
     swaggerSchemaUIServerImpl redocIndexTemplate redocFiles
 
@@ -109,4 +109,4 @@ redocIndexTemplate :: Text
 redocIndexTemplate = $(embedText "redoc.index.html.tmpl")
 
 redocFiles :: [(FilePath, ByteString)]
-redocFiles = $(embedRecursiveDir "redoc-dist-1.22.3")
+redocFiles = $(embedRecursiveDir "redoc-dist-2.0.0-rc.53")

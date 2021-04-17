@@ -47,7 +47,7 @@ module Servant.Swagger.UI.Core (
     ) where
 
 import Data.ByteString                (ByteString)
-import Data.Swagger                   (Swagger)
+import Data.OpenApi                   (OpenApi)
 import GHC.TypeLits                   (KnownSymbol, Symbol, symbolVal)
 import Network.Wai.Application.Static (embeddedSettings, staticApp)
 import Servant
@@ -68,7 +68,7 @@ import qualified Data.Text as T
 -- @
 --
 type SwaggerSchemaUI (dir :: Symbol) (schema :: Symbol) =
-    SwaggerSchemaUI' dir (schema :> Get '[JSON] Swagger)
+    SwaggerSchemaUI' dir (schema :> Get '[JSON] OpenApi)
 
 -- | Use 'SwaggerSchemaUI'' when you need even more control over
 -- where @swagger.json@ is served (e.g. subdirectory).
@@ -101,9 +101,9 @@ instance (KnownSymbol dir, HasLink api, Link ~ MkLink api Link, IsElem api api)
         proxyApi = Proxy :: Proxy api
 
 swaggerSchemaUIServerImpl
-    :: (Monad m, ServerT api m ~ m Swagger)
+    :: (Monad m, ServerT api m ~ m OpenApi)
     => T.Text -> [(FilePath, ByteString)]
-    -> Swagger -> ServerT (SwaggerSchemaUI' dir api) m
+    -> OpenApi -> ServerT (SwaggerSchemaUI' dir api) m
 swaggerSchemaUIServerImpl indexTemplate files swagger
   = swaggerSchemaUIServerImpl' indexTemplate files $ return swagger
 
@@ -121,3 +121,4 @@ swaggerSchemaUIServerImpl' indexTemplate files server
     :<|> rest
   where
     rest = Tagged $ staticApp $ embeddedSettings files
+

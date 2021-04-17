@@ -1,3 +1,6 @@
+- 0.4.0.2.0.0
+    - Switch to OpenApi 3.0
+
 - 0.3.2.1.22.3
     - Update to ReDoc-1.22.3
 

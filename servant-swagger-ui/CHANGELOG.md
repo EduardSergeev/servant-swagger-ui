@@ -1,3 +1,6 @@
+- 0.4.0.3.47.1
+    - Switch to OpenApi 3.0
+
 - 0.3.4.46.0
     - Update to `swagger-ui-3.46.0`
 

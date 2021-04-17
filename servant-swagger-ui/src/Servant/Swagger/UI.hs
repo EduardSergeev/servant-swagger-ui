@@ -58,7 +58,7 @@ module Servant.Swagger.UI (
 import Servant.Swagger.UI.Core
 
 import Data.ByteString (ByteString)
-import Data.Swagger    (Swagger)
+import Data.OpenApi    (OpenApi)
 import Data.Text       (Text)
 import FileEmbedLzma
 import Servant
@@ -69,8 +69,8 @@ import Servant
 -- swaggerSchemaUIServer :: Swagger -> Server (SwaggerSchemaUI schema dir)
 -- @
 swaggerSchemaUIServer
-    :: (Server api ~ Handler Swagger)
-    => Swagger -> Server (SwaggerSchemaUI' dir api)
+    :: (Server api ~ Handler OpenApi)
+    => OpenApi -> Server (SwaggerSchemaUI' dir api)
 swaggerSchemaUIServer =
     swaggerSchemaUIServerImpl swaggerUiIndexTemplate swaggerUiFiles
 
@@ -82,8 +82,8 @@ swaggerSchemaUIServer =
 -- swaggerSchemaUIServerT :: Swagger -> ServerT (SwaggerSchemaUI schema dir) m
 -- @
 swaggerSchemaUIServerT
-    :: (Monad m, ServerT api m ~ m Swagger)
-    => Swagger -> ServerT (SwaggerSchemaUI' dir api) m
+    :: (Monad m, ServerT api m ~ m OpenApi)
+    => OpenApi -> ServerT (SwaggerSchemaUI' dir api) m
 swaggerSchemaUIServerT =
     swaggerSchemaUIServerImpl swaggerUiIndexTemplate swaggerUiFiles
 
@@ -116,4 +116,4 @@ swaggerUiIndexTemplate :: Text
 swaggerUiIndexTemplate = $(embedText "index.html.tmpl")
 
 swaggerUiFiles :: [(FilePath, ByteString)]
-swaggerUiFiles = $(embedRecursiveDir "swagger-ui-dist-3.46.0")
+swaggerUiFiles = $(embedRecursiveDir "swagger-ui-dist-3.47.1")
