@@ -1,12 +1,15 @@
 {-# LANGUAGE ConstraintKinds            #-}
 {-# LANGUAGE DataKinds                  #-}
 {-# LANGUAGE DeriveGeneric              #-}
+{-# LANGUAGE FlexibleInstances          #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE MultiParamTypeClasses      #-}
 {-# LANGUAGE OverloadedStrings          #-}
 {-# LANGUAGE ScopedTypeVariables        #-}
+{-# LANGUAGE StandaloneDeriving         #-}
 {-# LANGUAGE TypeFamilies               #-}
 {-# LANGUAGE TypeOperators              #-}
+{-# LANGUAGE TypeSynonymInstances       #-}
 {-# LANGUAGE UndecidableInstances       #-}
 -----------------------------------------------------------------------------
 --
@@ -46,15 +49,19 @@ module Servant.Swagger.UI.Core (
     Handler,
     ) where
 
-import Data.ByteString                (ByteString)
-import Data.OpenApi                   (OpenApi)
-import GHC.TypeLits                   (KnownSymbol, Symbol, symbolVal)
-import Network.Wai.Application.Static (embeddedSettings, staticApp)
-import Servant
-import Servant.HTML.Blaze             (HTML)
-import Text.Blaze                     (ToMarkup (..))
-
+import           Data.ByteString                (ByteString)
+import           Data.OpenApi                   (OpenApi)
+import           Data.String (IsString)
 import qualified Data.Text as T
+import qualified Data.Text.Encoding as T
+import           GHC.Generics (Generic)
+import           GHC.TypeLits                   (KnownSymbol, Symbol, symbolVal)
+import           Network.Wai.Application.Static (embeddedSettings, staticApp)
+import           Servant
+import           Servant.HTML.Blaze             (HTML)
+import           Text.Blaze                     (ToMarkup (..))
+import qualified Data.ByteString.Lazy.Char8 as BL8
+
 
 -- | Swagger schema + ui api.
 --
@@ -86,7 +93,12 @@ type SwaggerSchemaUI' (dir :: Symbol) (api :: *) =
 --
 -- Implementation detail: the @index.html@ is prepopulated with parameters
 -- to find schema file automatically.
-data SwaggerUiHtml (dir :: Symbol) (api :: *) = SwaggerUiHtml T.Text
+newtype SwaggerUiHtml (dir :: Symbol) (api :: *) = SwaggerUiHtml {
+  toText :: T.Text
+} deriving (Eq, Show, Generic, IsString)
+
+instance MimeUnrender HTML (SwaggerUiHtml d a) where
+  mimeUnrender _ = Right . SwaggerUiHtml . T.decodeUtf8 . BL8.toStrict
 
 instance (KnownSymbol dir, HasLink api, Link ~ MkLink api Link, IsElem api api)
     => ToMarkup (SwaggerUiHtml dir api)
